@@ -7,14 +7,9 @@ from account.models import User, Profile
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
-
-    @property
-    def category_username(self):
-        return self.profile.user.username
 
 
 class Item(models.Model):

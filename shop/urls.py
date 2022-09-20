@@ -11,6 +11,7 @@ router.register('category', CategoryViewSet, basename='category')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('category/<int:category_id>/', views.CategoryRetrieveUpdateDestroyAPIView.as_view()),
     path('category/<int:category_id>/item/', views.ItemListCreateAPIView.as_view()),
     path('category/<int:category_id>/item/<int:pk>/', views.ItemRetrieveDestroyUpdateAPIView.as_view()),
     path('category/<int:category_id>/item/<int:pk>/order/', views.OrderListCreateAPIView.as_view()),
