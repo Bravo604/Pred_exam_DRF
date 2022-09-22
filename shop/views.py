@@ -18,19 +18,6 @@ class CategoryViewSet(ModelViewSet):
     authentication_classes = [SessionAuthentication, TokenAuthentication, ]
     permission_classes = [IsSenderPermission, ]
 
-    def perform_create(self, serializer):
-        serializer.save()
-
-    def get_queryset(self):
-        return self.queryset
-
-
-class CategoryRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    authentication_classes = [SessionAuthentication, TokenAuthentication]
-    permission_classes = [IsSenderPermission, ]
-
 
 class CategoryRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
@@ -49,7 +36,10 @@ class ItemListCreateAPIView(ListCreateAPIView):
         return self.queryset.filter(category_id=self.kwargs['category_id'])
 
     def perform_create(self, serializer):
-        serializer.save()
+        serializer.save(
+            category=get_object_or_404(Category, id=self.kwargs['category_id']),
+            profile=self.request.user.profile
+        )
 
 
 class ItemRetrieveDestroyUpdateAPIView(RetrieveUpdateDestroyAPIView):
@@ -69,7 +59,10 @@ class OrderListCreateAPIView(ListCreateAPIView):
         return self.queryset.filter(pk=self.kwargs['pk'])
 
     def perform_create(self, serializer):
-        serializer.save(profile=get_object_or_404(Profile, pk=self.kwargs['pk']))
+        serializer.save(
+            profile=self.request.user.profile,
+            item=get_object_or_404(Item, id=self.kwargs['pk'])
+        )
 
 
 class OrderRetrieveDestroyUpdateAPIView(RetrieveUpdateDestroyAPIView):
